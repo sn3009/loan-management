@@ -2,9 +2,7 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
-            <el-table
-                :data="tableData"
-                style="width: 100%">
+            <el-table :data="tableData" style="width: 100%">
                 <el-table-column type="expand">
                     <template scope="props">
                         <el-form label-position="left" inline class="demo-table-expand">
@@ -29,7 +27,7 @@
                             <el-form-item label="最低额度">
                                 <span>{{ props.row.bottomQota }}</span>
                             </el-form-item>
-                            <el-form-item label="放款时间(小时)">
+                            <el-form-item label="放款时间(小时)" style="white-space: nowrap;">
                                 <span>{{ props.row.outTime }}</span>
                             </el-form-item>
                             <el-form-item label="是否可用">
@@ -38,18 +36,9 @@
                         </el-form>
                     </template>
                 </el-table-column>
-                <el-table-column
-                    label="合作商名称"
-                    prop="appName">
-                </el-table-column>
-                <el-table-column
-                    label="logo"
-                    prop="logo">
-                </el-table-column>
-                <el-table-column
-                    label="费率"
-                    prop="rate">
-                </el-table-column>
+                <el-table-column label="合作商名称" prop="appName"></el-table-column>
+                <el-table-column label="logo" prop="logo"></el-table-column>
+                <el-table-column label="费率" prop="rate"></el-table-column>
                 <el-table-column label="操作" width="200">
                     <template scope="scope">
                         <el-button
@@ -79,6 +68,7 @@
                     :total="count">
                 </el-pagination>
             </div>
+            <!--修改-->
             <el-dialog title="修改" v-model="dialogFormVisible">
                 <el-form :model="selectTable">
                     <el-form-item label="合作商名称" label-width="100px">
@@ -102,13 +92,20 @@
                     <el-form-item label="放款时间(小时)" label-width="100px">
                         <el-input v-model="selectTable.outTime"></el-input>
                     </el-form-item>
-                    <el-form-item label="是否可用" label-width="100px">
-                        <el-cascader
-                            :options="categoryOptions"
-                            v-model="selectedCategory"
-                            change-on-select
-                        ></el-cascader>
+                    <!-- <el-form-item label="是否可用" label-width="100px">
+                        <el-cascader :options="categoryOptions" v-model="selectedCategory" change-on-select></el-cascader>
+                    </el-form-item> -->
+                     <el-form-item label="启用状态" label-width="100px">
+                        <el-select v-model="selectStatus"  @change="handleSelect" :placeholder="selectMenu.label">
+                            <el-option
+                              v-for="item in status" 
+                              :key="item.id"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
+                  
                     <!--<el-form-item label="商铺图片" label-width="100px">-->
                         <!--<el-upload-->
                             <!--class="avatar-uploader"-->
@@ -137,10 +134,10 @@
     import {
         getCooperation,
         getCooperationCount,
-        foodCategory,
-        updateResturant,
-        searchplace,
-        deleteResturant
+        // foodCategory,
+        // updateResturant,
+        // searchplace,
+        // deleteResturant
     } from '@/api/getData'
     export default {
         data(){
@@ -158,6 +155,16 @@
                 categoryOptions: [],
                 selectedCategory: [],
                 address: {},
+                status: [{
+                    value: '0',
+                    label: '禁用'
+                },{
+                    value: '1',
+                    label: '启用'
+                }],
+                selectStatus :null,
+                selectMenu :{},
+                statusTxt : '',
             }
         },
         created(){
@@ -172,6 +179,7 @@
                     //this.city = await cityGuess();
                     const countData = await getCooperationCount();
                     if (countData.code == 1) {
+
                         this.count = countData.obj;
                     } else {
                         throw new Error('获取数据失败');
@@ -182,49 +190,20 @@
                 }
             },
             async getCategory(){
-                const addnew = {
-                    value: "id",
-                    label: "name",
-                    children: []
-                }
-                addnew.children.push({
-                    value: "1",
-                    label: "启用",
-                })
-                addnew.children.push({
-                    value: "0",
-                    label: "禁用",
-                })
-                this.categoryOptions.push(addnew);
-//                try{
-//                    const categories = await foodCategory();
-//                    categories.forEach(item => {
-//                        if (item.sub_categories.length) {
-//                            const addnew = {
-//                                value: item.name,
-//                                label: item.name,
-//                                children: []
-//                            }
-//                            item.sub_categories.forEach((subitem, index) => {
-//                                if (index == 0) {
-//                                    return
-//                                }
-//                                addnew.children.push({
-//                                    value: subitem.name,
-//                                    label: subitem.name,
-//                                })
-//                            })
-//                            this.categoryOptions.push(addnew)
-//                        }
-//                    })
-//                }catch(err){
-//                    console.log('获取商铺种类失败', err);
-//                }
+                this.status = [{
+                    value: '1',
+                    label: '启用'
+                },{
+                    value: '0',
+                    label: '禁用'
+                }]
+            
             },
             async getCooperation(){
                 //const {latitude, longitude} = this.city;
                 const cooperations = await getCooperation({type: 1, limit: this.offset, page: this.limit});
                 this.tableData = [];
+                console.log(cooperations);
                 cooperations.obj.forEach(item => {
                     const tableData = {};
                     tableData.appName = item.appName;
@@ -245,16 +224,33 @@
             handleCurrentChange(val) {
                 this.currentPage = val;
                 this.offset = (val - 1) * this.limit;
-                this.getResturants()
+                this.getCooperation()
             },
             handleEdit(index, row) {
+                console.log(row);
                 this.selectTable = row;
-                this.address.address = row.address;
                 this.dialogFormVisible = true;
-                this.selectedCategory = row.enabled;
+                // this.selectStatus = row.enabled;
+                if(row.enabled==0){
+                    this.statusTxt = '禁用'
+                }else{
+                    this.statusTxt = '启用'
+
+                }
+                console.log(this.statusTxt)
+                this.selectMenu = {label: this.statusTxt, value: row.enabled}
+                console.log(this.selectMenu.label)
                 if (!this.categoryOptions.length) {
+                    console.log(11);
                     this.getCategory();
                 }
+            },
+            handleSelect(index){
+                console.log(index);
+                this.selectStatus = index;
+            
+
+                console.log(this.selectMenu)
             },
             addFood(index, row){
                 this.$router.push({path: 'addGoods', query: {restaurant_id: row.id}})
@@ -279,45 +275,45 @@
                     console.log('删除店铺失败')
                 }
             },
-            async querySearchAsync(queryString, cb) {
-                if (queryString) {
-                    try {
-                        const cityList = await searchplace(this.city.id, queryString);
-                        if (cityList instanceof Array) {
-                            cityList.map(item => {
-                                item.value = item.address;
-                                return item;
-                            })
-                            cb(cityList)
-                        }
-                    } catch (err) {
-                        console.log(err)
-                    }
-                }
-            },
-            addressSelect(vale){
-                const {address, latitude, longitude} = vale;
-                this.address = {address, latitude, longitude};
-            },
-            handleServiceAvatarScucess(res, file) {
-                if (res.status == 1) {
-                    this.selectTable.image_path = res.image_path;
-                } else {
-                    this.$message.error('上传图片失败！');
-                }
-            },
-            beforeAvatarUpload(file) {
-                const isRightType = (file.type === 'image/jpeg') || (file.type === 'image/png');
-                const isLt2M = file.size / 1024 / 1024 < 2;
+            // async querySearchAsync(queryString, cb) {
+            //     if (queryString) {
+            //         try {
+            //             const cityList = await searchplace(this.city.id, queryString);
+            //             if (cityList instanceof Array) {
+            //                 cityList.map(item => {
+            //                     item.value = item.address;
+            //                     return item;
+            //                 })
+            //                 cb(cityList)
+            //             }
+            //         } catch (err) {
+            //             console.log(err)
+            //         }
+            //     }
+            // },
+            // addressSelect(vale){
+            //     const {address, latitude, longitude} = vale;
+            //     this.address = {address, latitude, longitude};
+            // },
+            // handleServiceAvatarScucess(res, file) {
+            //     if (res.status == 1) {
+            //         this.selectTable.image_path = res.image_path;
+            //     } else {
+            //         this.$message.error('上传图片失败！');
+            //     }
+            // },
+            // beforeAvatarUpload(file) {
+            //     const isRightType = (file.type === 'image/jpeg') || (file.type === 'image/png');
+            //     const isLt2M = file.size / 1024 / 1024 < 2;
 
-                if (!isRightType) {
-                    this.$message.error('上传头像图片只能是 JPG 格式!');
-                }
-                if (!isLt2M) {
-                    this.$message.error('上传头像图片大小不能超过 2MB!');
-                }
-                return isRightType && isLt2M;
-            },
+            //     if (!isRightType) {
+            //         this.$message.error('上传头像图片只能是 JPG 格式!');
+            //     }
+            //     if (!isLt2M) {
+            //         this.$message.error('上传头像图片大小不能超过 2MB!');
+            //     }
+            //     return isRightType && isLt2M;
+            // },
             async updateShop(){
                 this.dialogFormVisible = false;
                 try {
@@ -352,7 +348,7 @@
     }
 
     .demo-table-expand label {
-        width: 90px;
+        width: 100px;
         color: #99a9bf;
     }
 

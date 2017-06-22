@@ -11,10 +11,10 @@ let routerMode = 'history';
 let baseImgPath = 'http://images.cangdu.org/';
 
 if (process.env.NODE_ENV == 'development') {
-    baseUrl = 'http://www.shuttle.com';
+    baseUrl = 'http://www.manage.com';
 	//baseUrl = 'http://cangdu.org:8001';
 }else{
-	baseUrl = 'http://www.shuttle.com';
+	baseUrl = 'http://www.manage.com';
 }
 
 export {
