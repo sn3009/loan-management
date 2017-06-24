@@ -223,7 +223,9 @@
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
+                console.log(val);
                 this.offset = (val - 1) * this.limit;
+                console.log(this.offset);
                 this.getCooperation()
             },
             handleEdit(index, row) {

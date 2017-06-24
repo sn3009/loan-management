@@ -19,6 +19,18 @@ export const signout = () => fetch('/admin/singout');
 export const getAdminInfo = () => fetch('/admin/admin/getAdmin/1');
 
 /**
+ * 新增用户
+ */
+
+export const insertAdmin = data => fetch('/admin/admin/insertAdmin',data, 'PUT');
+
+/**
+ * 修改用户
+ */
+
+export const updateAdmin = data => fetch('/admin/admin/updateAdmin',data, 'PUT');
+
+/**
  * 获取合作商数量
  */
 
@@ -92,7 +104,7 @@ export const cityGuess = () => fetch('/v1/cities', {
  * 添加商铺
  */
 
-export const addShop = data => fetch('/shopping/addShop', data, 'POST');
+export const addShop = data => fetc/shopping/addShoph('', data, 'POST');
 
 /**
  * 获取搜索地址
