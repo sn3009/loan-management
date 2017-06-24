@@ -14,7 +14,7 @@ if (process.env.NODE_ENV == 'development') {
     baseUrl = 'http://www.manage.com';
 	//baseUrl = 'http://cangdu.org:8001';
 }else{
-	baseUrl = 'http://www.manage.com';
+	baseUrl = 'http://120.92.112.75';
 }
 
 export {
