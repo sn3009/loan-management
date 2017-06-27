@@ -30,17 +30,24 @@ export const insertAdmin = data => fetch('/admin/admin/insertAdmin',data, 'PUT')
 
 export const updateAdmin = data => fetch('/admin/admin/updateAdmin',data, 'PUT');
 
-/**
- * 获取合作商数量
- */
-
-export const getCooperationCount = () => fetch('/admin/loan/cooperationCount/0');
 
 /**
- * 获取合作商数量
+ * 获取合作商列表
  */
 
-export const getCooperation = data => fetch('/admin/loan/getLoanList', data);
+export const getCooperation = data => fetch('/admin/loan/getHotLoanListWithType', data);
+
+/**
+ * 更新合作商列表
+ */
+
+export const updateHotLoan = data => fetch('/admin/loan/updateHotLoan', data, 'PUT');
+
+/**
+ * 新增合作商列表
+ */
+
+export const insertHotLoan = data => fetch('/admin/loan/insertHotLoan', data, 'PUT');
 
 /**
  * api请求量
@@ -160,11 +167,7 @@ export const getResturantDetail = restaurant_id => fetch('/shopping/restaurant/'
 
 export const getResturantsCount = () => fetch('/shopping/restaurants/count');
 
-/**
- * 更新餐馆信息
- */
 
-export const updateResturant = data => fetch('/admin/loan/updateHotLoan', data, 'PUT');
 
 /**
  * 删除餐馆

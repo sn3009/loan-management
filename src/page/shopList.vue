@@ -2,6 +2,20 @@
     <div class="fillcontain">
         <head-top></head-top>
         <div class="table_container">
+        <!--工具条-->
+            <el-col :span="24" class="toolbar" style="padding-bottom: 0px;">
+                <el-form :inline="true" :model="filters">
+                    <!-- <el-form-item>
+                        <el-input v-model="filters.name" placeholder="姓名"></el-input>
+                    </el-form-item>
+                    <el-form-item>
+                        <el-button type="primary" v-on:click="getUsers">查询</el-button>
+                    </el-form-item> -->
+                    <el-form-item>
+                        <el-button type="primary" @click="handleAdd">新增</el-button>
+                    </el-form-item>
+                </el-form>
+            </el-col>
             <el-table :data="tableData" style="width: 100%">
                 <el-table-column type="expand">
                     <template scope="props">
@@ -68,34 +82,31 @@
                     :total="count">
                 </el-pagination>
             </div>
-            <!--修改-->
-            <el-dialog title="修改" v-model="dialogFormVisible">
-                <el-form :model="selectTable">
-                    <el-form-item label="合作商名称" label-width="100px">
-                        <el-input v-model="selectTable.appName" auto-complete="off"></el-input>
+            <!--新增-->
+            <el-dialog title="新增" v-model="addFormVisible">
+                <el-form :model="addForm" :rules="addFormRules" ref="addForm">
+                    <el-form-item label="合作商名称" label-width="110px" prop='appName'>
+                        <el-input v-model="addForm.appName" auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="logo" label-width="100px">
-                        <el-input v-model="selectTable.logo" auto-complete="off"></el-input>
+                    <el-form-item label="logo" label-width="110px" prop='logo'>
+                        <el-input v-model="addForm.logo" auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="费率" label-width="100px">
-                        <el-input v-model="selectTable.rate"></el-input>
+                    <el-form-item label="费率" label-width="110px" prop='rate'>
+                        <el-input v-model="addForm.rate"></el-input>
                     </el-form-item>
-                    <el-form-item label="服务费" label-width="100px">
-                        <el-input v-model="selectTable.serviceCharge"></el-input>
+                    <el-form-item label="服务费" label-width="110px" prop='serviceCharge'>
+                        <el-input v-model="addForm.serviceCharge"></el-input>
                     </el-form-item>
-                    <el-form-item label="最高额度" label-width="100px">
-                        <el-input v-model="selectTable.topQota"></el-input>
+                    <el-form-item label="最高额度" label-width="110px" prop='topQota'>
+                        <el-input v-model="addForm.topQota"></el-input>
                     </el-form-item>
-                    <el-form-item label="最低额度" label-width="100px">
-                        <el-input v-model="selectTable.bottomQota"></el-input>
+                    <el-form-item label="最低额度" label-width="110px" prop='bottomQota'>
+                        <el-input v-model="addForm.bottomQota"></el-input>
                     </el-form-item>
-                    <el-form-item label="放款时间(小时)" label-width="100px">
-                        <el-input v-model="selectTable.outTime"></el-input>
+                    <el-form-item label="放款时间(小时)" label-width="110px" prop='outTime'>
+                        <el-input v-model="addForm.outTime"></el-input>
                     </el-form-item>
-                    <!-- <el-form-item label="是否可用" label-width="100px">
-                        <el-cascader :options="categoryOptions" v-model="selectedCategory" change-on-select></el-cascader>
-                    </el-form-item> -->
-                     <el-form-item label="启用状态" label-width="100px">
+                     <el-form-item label="启用状态" label-width="110px">
                         <el-select v-model="selectStatus"  @change="handleSelect" :placeholder="selectMenu.label">
                             <el-option
                               v-for="item in status" 
@@ -105,23 +116,50 @@
                             </el-option>
                         </el-select>
                     </el-form-item>
-                  
-                    <!--<el-form-item label="商铺图片" label-width="100px">-->
-                        <!--<el-upload-->
-                            <!--class="avatar-uploader"-->
-                            <!--:action="baseUrl + '/v1/addimg/shop'"-->
-                            <!--:show-file-list="false"-->
-                            <!--:on-success="handleServiceAvatarScucess"-->
-                            <!--:before-upload="beforeAvatarUpload">-->
-                            <!--<img v-if="selectTable.image_path" :src="baseImgPath + selectTable.image_path"-->
-                                 <!--class="avatar">-->
-                            <!--<i v-else class="el-icon-plus avatar-uploader-icon"></i>-->
-                        <!--</el-upload>-->
-                    <!--</el-form-item>-->
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="dialogFormVisible = false">取 消</el-button>
-                    <el-button type="primary" @click="updateShop">确 定</el-button>
+                    <el-button type="primary" @click="submitLoan('addForm')">确 定</el-button>
+                </div>
+            </el-dialog>
+            <!--修改-->
+            <el-dialog title="修改" v-model="dialogFormVisible">
+                <el-form :model="selectTable" :rules="editloanRules" ref="editloan">
+                    <el-form-item label="合作商名称" label-width="110px" prop='appName'>
+                        <el-input v-model="selectTable.appName" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="logo" label-width="110px" prop='logo'>
+                        <el-input v-model="selectTable.logo" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item label="费率" label-width="110px" prop='rate'>
+                        <el-input v-model="selectTable.rate"></el-input>
+                    </el-form-item>
+                    <el-form-item label="服务费" label-width="110px" prop='serviceCharge'>
+                        <el-input v-model="selectTable.serviceCharge"></el-input>
+                    </el-form-item>
+                    <el-form-item label="最高额度" label-width="110px" prop='topQota'>
+                        <el-input v-model="selectTable.topQota"></el-input>
+                    </el-form-item>
+                    <el-form-item label="最低额度" label-width="110px" prop='bottomQota'>
+                        <el-input v-model="selectTable.bottomQota"></el-input>
+                    </el-form-item>
+                    <el-form-item label="放款时间(小时)" label-width="110px" prop='outTime'>
+                        <el-input v-model="selectTable.outTime"></el-input>
+                    </el-form-item>
+                     <el-form-item label="启用状态" label-width="110px">
+                        <el-select v-model="selectStatus"  @change="handleSelect" :placeholder="selectMenu.label">
+                            <el-option
+                              v-for="item in status" 
+                              :key="item.id"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-form>
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="editHotLoan">确 定</el-button>
                 </div>
             </el-dialog>
         </div>
@@ -133,28 +171,79 @@
     import {baseUrl, baseImgPath} from '@/config/env'
     import {
         getCooperation,
-        getCooperationCount,
-        // foodCategory,
-        // updateResturant,
-        // searchplace,
-        // deleteResturant
+        updateHotLoan,
+        insertHotLoan,
     } from '@/api/getData'
     export default {
         data(){
             return {
                 baseUrl,
                 baseImgPath,
+                filters: {
+                    name: ''
+                },
                 city: {},
-                offset: 0,
-                limit: 20,
+                pageNum: 1,
+                pageSize: 20,
                 count: 0,
                 tableData: [],
                 currentPage: 1,
+                addForm:{},
                 selectTable: {},
-                dialogFormVisible: false,
-                categoryOptions: [],
-                selectedCategory: [],
-                address: {},
+                addFormVisible: false,//新增界面是否显示
+                addFormRules: {
+                    appName: [
+                        {required: true, message: '请输入合作商名称', trigger: 'blur'}
+                    ],
+                    logo: [
+                        {required: true, message: '请输入logo图片', trigger: 'blur'}
+                    ],
+                    rate: [
+                        {required: true, message: '请输入费率', trigger: 'blur'}
+                    ],
+                    serviceCharge: [
+                        {required: true, message: '请输入服务费', trigger: 'blur'}
+                    ],
+                    topQota: [
+                        {required: true, message: '请输入最高额度', trigger: 'blur'}
+                    ],
+                    bottomQota: [
+                        {required: true, message: '请输入最低额度', trigger: 'blur'}
+                    ],
+                    outTime: [
+                        {required: true, message: '请输入放款时间', trigger: 'blur'}
+                    ],
+
+                },
+
+                dialogFormVisible: false,//编辑页面是否显示
+                //编辑
+                loanId: '',
+                editloanRules: {
+                    appName: [
+                        {required: true, message: '请输入合作商名称', trigger: 'blur'}
+                    ],
+                    logo: [
+                        {required: true, message: '请输入logo图片', trigger: 'blur'}
+                    ],
+                    rate: [
+                        {required: true, message: '请输入费率', trigger: 'blur'}
+                    ],
+                    serviceCharge: [
+                        {required: true, message: '请输入服务费', trigger: 'blur'}
+                    ],
+                    topQota: [
+                        {required: true, message: '请输入最高额度', trigger: 'blur'}
+                    ],
+                    bottomQota: [
+                        {required: true, message: '请输入最低额度', trigger: 'blur'}
+                    ],
+                    outTime: [
+                        {required: true, message: '请输入放款时间', trigger: 'blur'}
+                    ],
+
+                },
+              
                 status: [{
                     value: '0',
                     label: '禁用'
@@ -176,14 +265,6 @@
         methods: {
             async initData(){
                 try {
-                    //this.city = await cityGuess();
-                    const countData = await getCooperationCount();
-                    if (countData.code == 1) {
-
-                        this.count = countData.obj;
-                    } else {
-                        throw new Error('获取数据失败');
-                    }
                     this.getCooperation();
                 } catch (err) {
                     console.log('获取数据失败', err);
@@ -199,12 +280,60 @@
                 }]
             
             },
+             //显示新增界面
+            handleAdd: function () {
+                this.addFormVisible = true;
+                
+            },
+            submitLoan(addForm) {
+                this.$refs[addForm].validate(async (valid) => {
+                    if (valid) {
+                        const params = {
+                            loginName: this.addForm.loginName,
+                            loginPwd: this.addForm.loginPwd,
+                            trueName: this.addForm.trueName,
+                            mobile: this.addForm.mobile,
+                            enabled: this.value
+                        }
+                        try{
+                            const result = await insertHotLoan(params);
+                            if (result.code == 1) {
+                                this.initData();
+                                this.addForm.loginName = '';
+                                this.addForm.loginPwd = '';
+                                this.addForm.trueName = '';
+                                this.addForm.mobile = '';
+                                this.value = '1';
+
+                                this.addFormVisible = false;
+                                this.$message({
+                                    type: 'success',
+                                    message: '添加成功'
+                                });
+                            } else {
+                                 this.$message({
+                                    type: 'warning',
+                                    message: result.message
+                                });
+                            }
+                        }catch(err){
+                            console.log(err)
+                        }
+                    } else {
+                        this.$notify.error({
+                            title: '错误',
+                            message: '请检查输入是否正确',
+                            offset: 100
+                        });
+                        return false;
+                    }
+                });
+            },
             async getCooperation(){
-                //const {latitude, longitude} = this.city;
-                const cooperations = await getCooperation({type: 1, limit: this.offset, page: this.limit});
+                const cooperations = await getCooperation({type: 0, pageNum: this.pageNum, pageSize: this.pageSize});
                 this.tableData = [];
-                console.log(cooperations);
-                cooperations.obj.forEach(item => {
+                this.count = cooperations.obj.totalElements;
+                cooperations.obj.content.forEach(item => {
                     const tableData = {};
                     tableData.appName = item.appName;
                     tableData.logo = item.logo;
@@ -214,6 +343,11 @@
                     tableData.bottomQota = item.bottomQota;
                     tableData.outTime = item.outTime;
                     tableData.enabled = item.enabled;
+                    if(item.enabled==0){
+                        tableData.enabled = '禁用'
+                    }else{
+                        tableData.enabled = '启用'
+                    }
                     tableData.createTimeString = item.createTimeString;
                     this.tableData.push(tableData);
                 })
@@ -223,16 +357,15 @@
             },
             handleCurrentChange(val) {
                 this.currentPage = val;
-                console.log(val);
-                this.offset = (val - 1) * this.limit;
-                console.log(this.offset);
-                this.getCooperation()
+                this.pageNum = this.currentPage;
+                this.getCooperation();
             },
             handleEdit(index, row) {
                 console.log(row);
                 this.selectTable = row;
                 this.dialogFormVisible = true;
-                // this.selectStatus = row.enabled;
+                this.loanId = row.id;
+
                 if(row.enabled==0){
                     this.statusTxt = '禁用'
                 }else{
@@ -241,18 +374,12 @@
                 }
                 console.log(this.statusTxt)
                 this.selectMenu = {label: this.statusTxt, value: row.enabled}
-                console.log(this.selectMenu.label)
-                if (!this.categoryOptions.length) {
-                    console.log(11);
-                    this.getCategory();
-                }
+               
             },
             handleSelect(index){
-                console.log(index);
+        
                 this.selectStatus = index;
-            
 
-                console.log(this.selectMenu)
             },
             addFood(index, row){
                 this.$router.push({path: 'addGoods', query: {restaurant_id: row.id}})
@@ -277,57 +404,66 @@
                     console.log('删除店铺失败')
                 }
             },
-            // async querySearchAsync(queryString, cb) {
-            //     if (queryString) {
-            //         try {
-            //             const cityList = await searchplace(this.city.id, queryString);
-            //             if (cityList instanceof Array) {
-            //                 cityList.map(item => {
-            //                     item.value = item.address;
-            //                     return item;
-            //                 })
-            //                 cb(cityList)
+         
+           
+            // editAdmin(editForm) {
+            //     this.$refs[editForm].validate(async (valid) => {
+            //         if (valid) {
+            //             const params = {
+            //                 loginName: this.editForm.loginName,
+            //                 loginPwd: this.editForm.loginPwd,
+            //                 trueName: this.editForm.trueName,
+            //                 mobile: this.editForm.mobile,
+            //                 enabled: this.editValue,
+            //                 id:this.adminId
             //             }
-            //         } catch (err) {
-            //             console.log(err)
+            //             try{
+            //                 const result = await updateAdmin(params);
+            //                 console.log(result);
+            //                 if (result.code == 1) {
+            //                     this.initData();
+            //                     this.editFormVisible = false;
+            //                     this.$message({
+            //                         type: 'success',
+            //                         message: '修改成功'
+            //                     });
+            //                 } else {
+            //                      this.$message({
+            //                         type: 'warning',
+            //                         message: result.message
+            //                     });
+            //                 }
+            //             }catch(err){
+            //                 console.log(err)
+            //             }
+            //         } else {
+            //             this.$notify.error({
+            //                 title: '错误',
+            //                 message: '请检查输入是否正确',
+            //                 offset: 100
+            //             });
+            //             return false;
             //         }
-            //     }
+            //     });
             // },
-            // addressSelect(vale){
-            //     const {address, latitude, longitude} = vale;
-            //     this.address = {address, latitude, longitude};
-            // },
-            // handleServiceAvatarScucess(res, file) {
-            //     if (res.status == 1) {
-            //         this.selectTable.image_path = res.image_path;
-            //     } else {
-            //         this.$message.error('上传图片失败！');
-            //     }
-            // },
-            // beforeAvatarUpload(file) {
-            //     const isRightType = (file.type === 'image/jpeg') || (file.type === 'image/png');
-            //     const isLt2M = file.size / 1024 / 1024 < 2;
 
-            //     if (!isRightType) {
-            //         this.$message.error('上传头像图片只能是 JPG 格式!');
-            //     }
-            //     if (!isLt2M) {
-            //         this.$message.error('上传头像图片大小不能超过 2MB!');
-            //     }
-            //     return isRightType && isLt2M;
+            // editHotLoan(){
+
             // },
-            async updateShop(){
+            async editHotLoan(){
                 this.dialogFormVisible = false;
                 try {
                     Object.assign(this.selectTable, this.address);
-                    this.selectTable.category = this.selectedCategory.join('/');
-                    const res = await updateResturant(this.selectTable)
-                    if (res.status == 1) {
+                    this.selectTable.id = this.loanId;
+                    console.log(this.loanId);
+                    console.log(this.selectTable);
+                    const res = await updateHotLoan(this.selectTable)
+                    if (res.code == 1) {
                         this.$message({
                             type: 'success',
-                            message: '更新店铺信息成功'
+                            message: '更新合作商信息成功'
                         });
-                        this.getResturants();
+                        this.getCooperation();
                     } else {
                         this.$message({
                             type: 'error',

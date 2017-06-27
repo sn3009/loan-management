@@ -331,26 +331,26 @@
             },
 
             //删除管理员
-            async handleDelete(index, row) {
-                try{
-                    const res = await deleteResturant(row.id);
-                    if (res.status == 1) {
-                        this.$message({
-                            type: 'success',
-                            message: '删除店铺成功'
-                        });
-                        this.tableData.splice(index, 1);
-                    }else{
-                        throw new Error(res.message)
-                    }
-                }catch(err){
-                    this.$message({
-                        type: 'error',
-                        message: err.message
-                    });
-                    console.log('删除店铺失败')
-                }
-            },
+            // async handleDelete(index, row) {
+            //     try{
+            //         const res = await deleteResturant(row.id);
+            //         if (res.status == 1) {
+            //             this.$message({
+            //                 type: 'success',
+            //                 message: '删除店铺成功'
+            //             });
+            //             this.tableData.splice(index, 1);
+            //         }else{
+            //             throw new Error(res.message)
+            //         }
+            //     }catch(err){
+            //         this.$message({
+            //             type: 'error',
+            //             message: err.message
+            //         });
+            //         console.log('删除店铺失败')
+            //     }
+            // },
 
             //时间格式化
             getLocalTime(nS) { 
