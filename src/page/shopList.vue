@@ -45,29 +45,21 @@
                                 <span>{{ props.row.outTime }}</span>
                             </el-form-item>
                             <el-form-item label="是否可用">
-                                <span>{{ props.row.enabled }}</span>
+                                <span>{{ props.row.statusTxt }}</span>
                             </el-form-item>
                         </el-form>
                     </template>
                 </el-table-column>
                 <el-table-column label="合作商名称" prop="appName"></el-table-column>
-                <el-table-column label="logo" prop="logo"></el-table-column>
+                <el-table-column label="服务费" prop="serviceCharge"></el-table-column>
                 <el-table-column label="费率" prop="rate"></el-table-column>
+                <el-table-column label="是否可用" prop="statusTxt"></el-table-column>
+
                 <el-table-column label="操作" width="200">
                     <template scope="scope">
                         <el-button
                             size="mini"
                             @click="handleEdit(scope.$index, scope.row)">编辑
-                        </el-button>
-                        <el-button
-                            size="mini"
-                            type="Success"
-                            @click="addFood(scope.$index, scope.row)">添加
-                        </el-button>
-                        <el-button
-                            size="mini"
-                            type="danger"
-                            @click="handleDelete(scope.$index, scope.row)">删除
                         </el-button>
                     </template>
                 </el-table-column>
@@ -85,28 +77,28 @@
             <!--新增-->
             <el-dialog title="新增" v-model="addFormVisible">
                 <el-form :model="addForm" :rules="addFormRules" ref="addForm">
-                    <el-form-item label="合作商名称" label-width="110px" prop='appName'>
+                    <el-form-item label="合作商名称" label-width="120px" prop='appName'>
                         <el-input v-model="addForm.appName" auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="logo" label-width="110px" prop='logo'>
+                    <el-form-item label="logo" label-width="120px" prop='logo'>
                         <el-input v-model="addForm.logo" auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="费率" label-width="110px" prop='rate'>
-                        <el-input v-model="addForm.rate"></el-input>
+                    <el-form-item label="费率" label-width="120px" prop='rate'>
+                        <el-input v-model.number="addForm.rate"></el-input>
                     </el-form-item>
-                    <el-form-item label="服务费" label-width="110px" prop='serviceCharge'>
-                        <el-input v-model="addForm.serviceCharge"></el-input>
+                    <el-form-item label="服务费" label-width="120px" prop='serviceCharge'>
+                        <el-input v-model.number="addForm.serviceCharge"></el-input>
                     </el-form-item>
-                    <el-form-item label="最高额度" label-width="110px" prop='topQota'>
-                        <el-input v-model="addForm.topQota"></el-input>
+                    <el-form-item label="最高额度" label-width="120px" prop='topQota'>
+                        <el-input v-model.number="addForm.topQota"></el-input>
                     </el-form-item>
-                    <el-form-item label="最低额度" label-width="110px" prop='bottomQota'>
-                        <el-input v-model="addForm.bottomQota"></el-input>
+                    <el-form-item label="最低额度" label-width="120px" prop='bottomQota'>
+                        <el-input v-model.number="addForm.bottomQota"></el-input>
                     </el-form-item>
-                    <el-form-item label="放款时间(小时)" label-width="110px" prop='outTime'>
-                        <el-input v-model="addForm.outTime"></el-input>
+                    <el-form-item label="放款时间(小时)" label-width="120px" prop='outTime'>
+                        <el-input v-model.number="addForm.outTime"></el-input>
                     </el-form-item>
-                     <el-form-item label="启用状态" label-width="110px">
+                     <el-form-item label="启用状态" label-width="120px">
                         <el-select v-model="selectStatus"  @change="handleSelect" :placeholder="selectMenu.label">
                             <el-option
                               v-for="item in status" 
@@ -125,28 +117,28 @@
             <!--修改-->
             <el-dialog title="修改" v-model="dialogFormVisible">
                 <el-form :model="selectTable" :rules="editloanRules" ref="editloan">
-                    <el-form-item label="合作商名称" label-width="110px" prop='appName'>
+                    <el-form-item label="合作商名称" label-width="120px" prop='appName'>
                         <el-input v-model="selectTable.appName" auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="logo" label-width="110px" prop='logo'>
+                    <el-form-item label="logo" label-width="120px" prop='logo'>
                         <el-input v-model="selectTable.logo" auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item label="费率" label-width="110px" prop='rate'>
-                        <el-input v-model="selectTable.rate"></el-input>
+                    <el-form-item label="费率" label-width="120px" prop='rate'>
+                        <el-input v-model.number="selectTable.rate"></el-input>
                     </el-form-item>
-                    <el-form-item label="服务费" label-width="110px" prop='serviceCharge'>
-                        <el-input v-model="selectTable.serviceCharge"></el-input>
+                    <el-form-item label="服务费" label-width="120px" prop='serviceCharge'>
+                        <el-input v-model.number="selectTable.serviceCharge"></el-input>
                     </el-form-item>
-                    <el-form-item label="最高额度" label-width="110px" prop='topQota'>
-                        <el-input v-model="selectTable.topQota"></el-input>
+                    <el-form-item label="最高额度" label-width="120px" prop='topQota'>
+                        <el-input v-model.number="selectTable.topQota"></el-input>
                     </el-form-item>
-                    <el-form-item label="最低额度" label-width="110px" prop='bottomQota'>
-                        <el-input v-model="selectTable.bottomQota"></el-input>
+                    <el-form-item label="最低额度" label-width="120px" prop='bottomQota'>
+                        <el-input v-model.number="selectTable.bottomQota"></el-input>
                     </el-form-item>
-                    <el-form-item label="放款时间(小时)" label-width="110px" prop='outTime'>
-                        <el-input v-model="selectTable.outTime"></el-input>
+                    <el-form-item label="放款时间(小时)" label-width="120px" prop='outTime'>
+                        <el-input v-model.number="selectTable.outTime"></el-input>
                     </el-form-item>
-                     <el-form-item label="启用状态" label-width="110px">
+                     <el-form-item label="启用状态" label-width="120px">
                         <el-select v-model="selectStatus"  @change="handleSelect" :placeholder="selectMenu.label">
                             <el-option
                               v-for="item in status" 
@@ -199,19 +191,29 @@
                         {required: true, message: '请输入logo图片', trigger: 'blur'}
                     ],
                     rate: [
-                        {required: true, message: '请输入费率', trigger: 'blur'}
+                        {required: true, message: '请输入费率'},
+                        {type: 'number',message: '费率必须是数字'}
+
                     ],
                     serviceCharge: [
-                        {required: true, message: '请输入服务费', trigger: 'blur'}
+                        {required: true, message: '请输入服务费'},
+                        {type: 'number',message: '服务费必须是数字'}
+
                     ],
                     topQota: [
-                        {required: true, message: '请输入最高额度', trigger: 'blur'}
+                        {required: true, message: '请输入最高额度'},
+                        {type: 'number',message: '最高额度必须是数字'}
+
+
                     ],
                     bottomQota: [
-                        {required: true, message: '请输入最低额度', trigger: 'blur'}
+                        {required: true, message: '请输入最低额度'},
+                        {type: 'number',message: '最低额度必须是数字'}
+
                     ],
                     outTime: [
-                        {required: true, message: '请输入放款时间', trigger: 'blur'}
+                        {required: true, message: '请输入放款时间'},
+                        {type: 'number',message: '放款时间必须是数字'}
                     ],
 
                 },
@@ -220,26 +222,36 @@
                 //编辑
                 loanId: '',
                 editloanRules: {
-                    appName: [
+                   appName: [
                         {required: true, message: '请输入合作商名称', trigger: 'blur'}
                     ],
                     logo: [
                         {required: true, message: '请输入logo图片', trigger: 'blur'}
                     ],
                     rate: [
-                        {required: true, message: '请输入费率', trigger: 'blur'}
+                        {required: true, message: '请输入费率'},
+                        {type: 'number',message: '费率必须是数字'}
+
                     ],
                     serviceCharge: [
-                        {required: true, message: '请输入服务费', trigger: 'blur'}
+                        {required: true, message: '请输入服务费'},
+                        {type: 'number',message: '服务费必须是数字'}
+
                     ],
                     topQota: [
-                        {required: true, message: '请输入最高额度', trigger: 'blur'}
+                        {required: true, message: '请输入最高额度'},
+                        {type: 'number',message: '最高额度必须是数字'}
+
+
                     ],
                     bottomQota: [
-                        {required: true, message: '请输入最低额度', trigger: 'blur'}
+                        {required: true, message: '请输入最低额度'},
+                        {type: 'number',message: '最低额度必须是数字'}
+
                     ],
                     outTime: [
-                        {required: true, message: '请输入放款时间', trigger: 'blur'}
+                        {required: true, message: '请输入放款时间'},
+                        {type: 'number',message: '放款时间必须是数字'}
                     ],
 
                 },
@@ -289,11 +301,14 @@
                 this.$refs[addForm].validate(async (valid) => {
                     if (valid) {
                         const params = {
-                            loginName: this.addForm.loginName,
-                            loginPwd: this.addForm.loginPwd,
-                            trueName: this.addForm.trueName,
-                            mobile: this.addForm.mobile,
-                            enabled: this.value
+                            appName: this.addForm.appName,
+                            logo: this.addForm.logo,
+                            rate: this.addForm.rate,
+                            serviceCharge: this.addForm.serviceCharge,
+                            topQota: this.addForm.topQota,
+                            bottomQota: this.addForm.bottomQota,
+                            outTime: this.addForm.outTime,
+                            enabled: this.selectStatus
                         }
                         try{
                             const result = await insertHotLoan(params);
@@ -337,6 +352,7 @@
                     const tableData = {};
                     tableData.appName = item.appName;
                     tableData.logo = item.logo;
+                    tableData.id = item.id;
                     tableData.rate = item.rate;
                     tableData.serviceCharge = item.serviceCharge;
                     tableData.topQota = item.topQota;
@@ -344,9 +360,9 @@
                     tableData.outTime = item.outTime;
                     tableData.enabled = item.enabled;
                     if(item.enabled==0){
-                        tableData.enabled = '禁用'
+                        tableData.statusTxt = '禁用'
                     }else{
-                        tableData.enabled = '启用'
+                        tableData.statusTxt = '启用'
                     }
                     tableData.createTimeString = item.createTimeString;
                     this.tableData.push(tableData);
@@ -372,7 +388,7 @@
                     this.statusTxt = '启用'
 
                 }
-                console.log(this.statusTxt)
+               
                 this.selectMenu = {label: this.statusTxt, value: row.enabled}
                
             },
@@ -381,80 +397,14 @@
                 this.selectStatus = index;
 
             },
-            addFood(index, row){
-                this.$router.push({path: 'addGoods', query: {restaurant_id: row.id}})
-            },
-            async handleDelete(index, row) {
-                try {
-                    const res = await deleteResturant(row.id);
-                    if (res.status == 1) {
-                        this.$message({
-                            type: 'success',
-                            message: '删除店铺成功'
-                        });
-                        this.tableData.splice(index, 1);
-                    } else {
-                        throw new Error(res.message)
-                    }
-                } catch (err) {
-                    this.$message({
-                        type: 'error',
-                        message: err.message
-                    });
-                    console.log('删除店铺失败')
-                }
-            },
-         
-           
-            // editAdmin(editForm) {
-            //     this.$refs[editForm].validate(async (valid) => {
-            //         if (valid) {
-            //             const params = {
-            //                 loginName: this.editForm.loginName,
-            //                 loginPwd: this.editForm.loginPwd,
-            //                 trueName: this.editForm.trueName,
-            //                 mobile: this.editForm.mobile,
-            //                 enabled: this.editValue,
-            //                 id:this.adminId
-            //             }
-            //             try{
-            //                 const result = await updateAdmin(params);
-            //                 console.log(result);
-            //                 if (result.code == 1) {
-            //                     this.initData();
-            //                     this.editFormVisible = false;
-            //                     this.$message({
-            //                         type: 'success',
-            //                         message: '修改成功'
-            //                     });
-            //                 } else {
-            //                      this.$message({
-            //                         type: 'warning',
-            //                         message: result.message
-            //                     });
-            //                 }
-            //             }catch(err){
-            //                 console.log(err)
-            //             }
-            //         } else {
-            //             this.$notify.error({
-            //                 title: '错误',
-            //                 message: '请检查输入是否正确',
-            //                 offset: 100
-            //             });
-            //             return false;
-            //         }
-            //     });
-            // },
-
-            // editHotLoan(){
-
-            // },
             async editHotLoan(){
                 this.dialogFormVisible = false;
                 try {
                     Object.assign(this.selectTable, this.address);
                     this.selectTable.id = this.loanId;
+                    this.selectTable.enabled = this.selectStatus;
+
+                    console.log(this.selectStatus);
                     console.log(this.loanId);
                     console.log(this.selectTable);
                     const res = await updateHotLoan(this.selectTable)
@@ -471,7 +421,7 @@
                         });
                     }
                 } catch (err) {
-                    console.log('更新餐馆信息失败', err);
+                    console.log('更新合作商信息失败', err);
                 }
             },
         },

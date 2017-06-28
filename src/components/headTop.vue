@@ -40,19 +40,21 @@
 				if (command == 'home') {
 					this.$router.push('/manage');
 				}else if(command == 'singout'){
-					const res = await signout()
-					if (res.status == 1) {
-						this.$message({
-	                        type: 'success',
-	                        message: '退出成功'
-	                    });
-	                    this.$router.push('/');
-					}else{
-						this.$message({
-	                        type: 'error',
-	                        message: res.message
-	                    });
-					}
+					this.$router.push('/');
+
+					// const res = await signout()
+					// if (res.status == 1) {
+					// 	this.$message({
+	    //                     type: 'success',
+	    //                     message: '退出成功'
+	    //                 });
+	    //                 this.$router.push('/');
+					// }else{
+					// 	this.$message({
+	    //                     type: 'error',
+	    //                     message: res.message
+	    //                 });
+					// }
 				}
 			},
 		}
