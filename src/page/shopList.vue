@@ -32,6 +32,9 @@
                             <el-form-item label="费率">
                                 <span>{{ props.row.rate }}</span>
                             </el-form-item>
+                             <el-form-item label="网址">
+                                <span>{{ props.row.visitUrl }}</span>
+                            </el-form-item>
                             <el-form-item label="服务费">
                                 <span>{{ props.row.serviceCharge }}</span>
                             </el-form-item>
@@ -44,6 +47,9 @@
                             <el-form-item label="放款时间(小时)" style="white-space: nowrap;">
                                 <span>{{ props.row.outTime }}</span>
                             </el-form-item>
+                            <!-- <el-form-item label="借款期限(总月数)" style="white-space: nowrap;">
+                                <span>{{ props.row.deadline }}</span>
+                            </el-form-item> -->
                             <el-form-item label="是否可用">
                                 <span>{{ props.row.statusTxt }}</span>
                             </el-form-item>
@@ -83,6 +89,9 @@
                     <el-form-item label="logo" label-width="120px" prop='logo'>
                         <el-input v-model="addForm.logo" auto-complete="off"></el-input>
                     </el-form-item>
+                     <el-form-item label="网址" label-width="120px" prop='visitUrl'>
+                        <el-input v-model="addForm.visitUrl" auto-complete="off"></el-input>
+                    </el-form-item>
                     <el-form-item label="费率" label-width="120px" prop='rate'>
                         <el-input v-model.number="addForm.rate"></el-input>
                     </el-form-item>
@@ -98,6 +107,16 @@
                     <el-form-item label="放款时间(小时)" label-width="120px" prop='outTime'>
                         <el-input v-model.number="addForm.outTime"></el-input>
                     </el-form-item>
+                   <!--  <el-form-item label="借款期限(总月数)" label-width="120px">
+                        <el-select v-model="deadlineStatus"  @change="handleDiedlineSelect" :placeholder="selectMenu.label">
+                            <el-option
+                              v-for="item in deadline" 
+                              :key="item.id"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item> -->
                      <el-form-item label="启用状态" label-width="120px">
                         <el-select v-model="selectStatus"  @change="handleSelect" :placeholder="selectMenu.label">
                             <el-option
@@ -122,6 +141,9 @@
                     </el-form-item>
                     <el-form-item label="logo" label-width="120px" prop='logo'>
                         <el-input v-model="selectTable.logo" auto-complete="off"></el-input>
+                    </el-form-item>
+                     <el-form-item label="网址" label-width="120px" prop='visitUrl'>
+                        <el-input v-model="selectTable.visitUrl" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="费率" label-width="120px" prop='rate'>
                         <el-input v-model.number="selectTable.rate"></el-input>
@@ -190,6 +212,9 @@
                     logo: [
                         {required: true, message: '请输入logo图片', trigger: 'blur'}
                     ],
+                    visitUrl: [
+                        {required: true, message: '请输入网址', trigger: 'blur'}
+                    ],
                     rate: [
                         {required: true, message: '请输入费率'},
                         {type: 'number',message: '费率必须是数字'}
@@ -228,30 +253,27 @@
                     logo: [
                         {required: true, message: '请输入logo图片', trigger: 'blur'}
                     ],
+                    visitUrl: [
+                        {required: true, message: '请输入网址', trigger: 'blur'}
+                    ],
                     rate: [
                         {required: true, message: '请输入费率'},
-                        {type: 'number',message: '费率必须是数字'}
-
                     ],
                     serviceCharge: [
                         {required: true, message: '请输入服务费'},
-                        {type: 'number',message: '服务费必须是数字'}
+                        
 
                     ],
                     topQota: [
                         {required: true, message: '请输入最高额度'},
-                        {type: 'number',message: '最高额度必须是数字'}
-
-
+                    
                     ],
                     bottomQota: [
                         {required: true, message: '请输入最低额度'},
-                        {type: 'number',message: '最低额度必须是数字'}
-
+                
                     ],
                     outTime: [
                         {required: true, message: '请输入放款时间'},
-                        {type: 'number',message: '放款时间必须是数字'}
                     ],
 
                 },
@@ -263,7 +285,45 @@
                     value: '1',
                     label: '启用'
                 }],
+                deadline: [{
+                    value: '1',
+                    label: '1个月'
+                },{
+                    value: '2',
+                    label: '2个月'
+                },{
+                    value: '3',
+                    label: '3个月'
+                },{
+                    value: '4',
+                    label: '4个月'
+                },{
+                    value: '5',
+                    label: '5个月'
+                },{
+                    value: '6',
+                    label: '6个月'
+                },{
+                    value: '7',
+                    label: '7个月'
+                },{
+                    value: '8',
+                    label: '8个月'
+                },{
+                    value: '9',
+                    label: '9个月'
+                },{
+                    value: '10',
+                    label: '10个月'
+                },{
+                    value: '11',
+                    label: '11个月'
+                },{
+                    value: '12',
+                    label: '12个月'
+                }],
                 selectStatus :null,
+                deadlineStatus :null,
                 selectMenu :{},
                 statusTxt : '',
             }
@@ -352,12 +412,14 @@
                     const tableData = {};
                     tableData.appName = item.appName;
                     tableData.logo = item.logo;
+                    tableData.visitUrl = item.visitUrl;
                     tableData.id = item.id;
                     tableData.rate = item.rate;
                     tableData.serviceCharge = item.serviceCharge;
                     tableData.topQota = item.topQota;
                     tableData.bottomQota = item.bottomQota;
                     tableData.outTime = item.outTime;
+                    tableData.deadline = item.deadline;
                     tableData.enabled = item.enabled;
                     if(item.enabled==0){
                         tableData.statusTxt = '禁用'
@@ -393,8 +455,11 @@
                
             },
             handleSelect(index){
-        
                 this.selectStatus = index;
+            },
+            handleDiedlineSelect(index){
+                index=index+1;
+                this.deadlineStatus = index;
 
             },
             async editHotLoan(){
