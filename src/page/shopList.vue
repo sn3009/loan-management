@@ -47,9 +47,9 @@
                             <el-form-item label="放款时间(小时)" style="white-space: nowrap;">
                                 <span>{{ props.row.outTime }}</span>
                             </el-form-item>
-                            <!-- <el-form-item label="借款期限(总月数)" style="white-space: nowrap;">
+                            <el-form-item label="借款期限(总月数)" style="white-space: nowrap;">
                                 <span>{{ props.row.deadline }}</span>
-                            </el-form-item> -->
+                            </el-form-item>
                             <el-form-item label="是否可用">
                                 <span>{{ props.row.statusTxt }}</span>
                             </el-form-item>
@@ -107,8 +107,8 @@
                     <el-form-item label="放款时间(小时)" label-width="120px" prop='outTime'>
                         <el-input v-model.number="addForm.outTime"></el-input>
                     </el-form-item>
-                   <!--  <el-form-item label="借款期限(总月数)" label-width="120px">
-                        <el-select v-model="deadlineStatus"  @change="handleDiedlineSelect" :placeholder="selectMenu.label">
+                    <el-form-item label="借款期限(总月数)" label-width="120px">
+                        <el-select v-model="deadlineStatus"  @change="handleDiedlineSelect" >
                             <el-option
                               v-for="item in deadline" 
                               :key="item.id"
@@ -116,9 +116,9 @@
                               :value="item.value">
                             </el-option>
                         </el-select>
-                    </el-form-item> -->
+                    </el-form-item>
                      <el-form-item label="启用状态" label-width="120px">
-                        <el-select v-model="selectStatus"  @change="handleSelect" :placeholder="selectMenu.label">
+                        <el-select v-model="selectStatus"  @change="handleSelect" >
                             <el-option
                               v-for="item in status" 
                               :key="item.id"
@@ -129,7 +129,7 @@
                     </el-form-item>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="dialogFormVisible = false">取 消</el-button>
+                    <el-button @click="addFormVisible = false">取 消</el-button>
                     <el-button type="primary" @click="submitLoan('addForm')">确 定</el-button>
                 </div>
             </el-dialog>
@@ -159,6 +159,16 @@
                     </el-form-item>
                     <el-form-item label="放款时间(小时)" label-width="120px" prop='outTime'>
                         <el-input v-model.number="selectTable.outTime"></el-input>
+                    </el-form-item>
+                      <el-form-item label="借款期限(总月数)" label-width="120px">
+                        <el-select v-model="deadlineStatus"  @change="handleDiedlineSelect" :placeholder="deadlineMenu.label">
+                            <el-option
+                              v-for="item in deadline" 
+                              :key="item.id"
+                              :label="item.label"
+                              :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                      <el-form-item label="启用状态" label-width="120px">
                         <el-select v-model="selectStatus"  @change="handleSelect" :placeholder="selectMenu.label">
@@ -240,7 +250,7 @@
                         {required: true, message: '请输入放款时间'},
                         {type: 'number',message: '放款时间必须是数字'}
                     ],
-
+                  
                 },
 
                 dialogFormVisible: false,//编辑页面是否显示
@@ -325,6 +335,7 @@
                 selectStatus :null,
                 deadlineStatus :null,
                 selectMenu :{},
+                deadlineMenu :{},
                 statusTxt : '',
             }
         },
@@ -363,14 +374,18 @@
                         const params = {
                             appName: this.addForm.appName,
                             logo: this.addForm.logo,
+                            visitUrl:this.addForm.visitUrl,
                             rate: this.addForm.rate,
                             serviceCharge: this.addForm.serviceCharge,
                             topQota: this.addForm.topQota,
                             bottomQota: this.addForm.bottomQota,
                             outTime: this.addForm.outTime,
-                            enabled: this.selectStatus
+                            enabled: this.selectStatus,
+                            deadline:this.deadlineStatus
                         }
+                        
                         try{
+
                             const result = await insertHotLoan(params);
                             if (result.code == 1) {
                                 this.initData();
@@ -426,6 +441,7 @@
                     }else{
                         tableData.statusTxt = '启用'
                     }
+
                     tableData.createTimeString = item.createTimeString;
                     this.tableData.push(tableData);
                 })
@@ -439,7 +455,6 @@
                 this.getCooperation();
             },
             handleEdit(index, row) {
-                console.log(row);
                 this.selectTable = row;
                 this.dialogFormVisible = true;
                 this.loanId = row.id;
@@ -450,17 +465,41 @@
                     this.statusTxt = '启用'
 
                 }
+                if(row.deadline==1){
+                    this.deadlineTxt = '1个月'
+                }else if(row.deadline==2){
+                    this.deadlineTxt = '2个月'
+                }else if(row.deadline==3){
+                    this.deadlineTxt = '3个月'
+                }else if(row.deadline==4){
+                    this.deadlineTxt = '4个月'
+                }else if(row.deadline==5){
+                    this.deadlineTxt = '5个月'
+                }else if(row.deadline==6){
+                    this.deadlineTxt = '6个月'
+                }else if(row.deadline==7){
+                    this.deadlineTxt = '7个月'
+                }else if(row.deadline==8){
+                    this.deadlineTxt = '8个月'
+                }else if(row.deadline==9){
+                    this.deadlineTxt = '9个月'
+                }else if(row.deadline==10){
+                    this.deadlineTxt = '10个月'
+                }else if(row.deadline==11){
+                    this.deadlineTxt = '11个月'
+                }else if(row.deadline==12){
+                    this.deadlineTxt = '12个月'
+                }
                
-                this.selectMenu = {label: this.statusTxt, value: row.enabled}
+                this.selectMenu = {label: this.statusTxt, value: row.enabled};
+                this.deadlineMenu = {label: this.deadlineTxt,value:row.deadline}
                
             },
             handleSelect(index){
                 this.selectStatus = index;
             },
             handleDiedlineSelect(index){
-                index=index+1;
                 this.deadlineStatus = index;
-
             },
             async editHotLoan(){
                 this.dialogFormVisible = false;
@@ -468,10 +507,7 @@
                     Object.assign(this.selectTable, this.address);
                     this.selectTable.id = this.loanId;
                     this.selectTable.enabled = this.selectStatus;
-
-                    console.log(this.selectStatus);
-                    console.log(this.loanId);
-                    console.log(this.selectTable);
+                    this.selectTable.deadline = this.deadlineStatus;                
                     const res = await updateHotLoan(this.selectTable)
                     if (res.code == 1) {
                         this.$message({
@@ -501,7 +537,7 @@
     }
 
     .demo-table-expand label {
-        width: 100px;
+        width: 120px;
         color: #99a9bf;
     }
 
