@@ -60,9 +60,7 @@
 			async submitForm(formName) {
 				this.$refs[formName].validate(async (valid) => {
 					if (valid) {
-						const res = await login({loginName: this.loginForm.loginName, pwd: this.loginForm.pwd})
-  
-						//console.log(res.obj.trim() == "true");
+						const res = await login({loginName: this.loginForm.loginName, loginPwd: this.loginForm.pwd})
                         if (res.code ==1) {
 							this.$message({
 		                        type: 'success',

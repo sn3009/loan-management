@@ -41,7 +41,7 @@ export const getCooperation = data => fetch('/admin/loan/getHotLoanListWithType'
  * 更新合作商列表
  */
 
-export const updateHotLoan = data => fetch('/admin/loan/updateHotLoan', data, 'PUT');
+export const updateHotLoan = data => fetch('/admin/loan/update', data, 'PUT');
 
 /**
  * 新增合作商列表

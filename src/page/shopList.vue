@@ -33,22 +33,22 @@
                                 <span>{{ props.row.rate }}</span>
                             </el-form-item>
                              <el-form-item label="网址">
-                                <span>{{ props.row.visitUrl }}</span>
+                                <span>{{ props.row.url }}</span>
                             </el-form-item>
-                            <el-form-item label="服务费">
-                                <span>{{ props.row.serviceCharge }}</span>
+                            <el-form-item label="贷款范围">
+                                <span>{{ props.row.service }}</span>
                             </el-form-item>
-                            <el-form-item label="最高额度">
-                                <span>{{ props.row.topQota }}</span>
+                            <el-form-item label="借款金额">
+                                <span>{{ props.row.quta }}</span>
                             </el-form-item>
-                            <el-form-item label="最低额度">
-                                <span>{{ props.row.bottomQota }}</span>
+                            <el-form-item label="申请流程">
+                                <span>{{ props.row.flow }}</span>
                             </el-form-item>
-                            <el-form-item label="放款时间(小时)" style="white-space: nowrap;">
-                                <span>{{ props.row.outTime }}</span>
+                            <el-form-item label="申请条件" style="white-space: nowrap;">
+                                <span>{{ props.row.conditions }}</span>
                             </el-form-item>
-                            <el-form-item label="借款期限(总月数)" style="white-space: nowrap;">
-                                <span>{{ props.row.deadline }}</span>
+                            <el-form-item label="审核说明" style="white-space: nowrap;">
+                                <span>{{ props.row.commits }}</span>
                             </el-form-item>
                             <el-form-item label="是否可用">
                                 <span>{{ props.row.statusTxt }}</span>
@@ -57,10 +57,9 @@
                     </template>
                 </el-table-column>
                 <el-table-column label="合作商名称" prop="appName"></el-table-column>
-                <el-table-column label="服务费" prop="serviceCharge"></el-table-column>
                 <el-table-column label="费率" prop="rate"></el-table-column>
-                <el-table-column label="是否可用" prop="statusTxt"></el-table-column>
-
+                <el-table-column label="网址" prop="url"></el-table-column>
+                <el-table-column label="申请条件" prop="conditions"></el-table-column>
                 <el-table-column label="操作" width="200">
                     <template scope="scope">
                         <el-button
@@ -90,37 +89,45 @@
                         <el-input v-model="addForm.logo" auto-complete="off"></el-input>
                     </el-form-item>
                      <el-form-item label="网址" label-width="120px" prop='visitUrl'>
-                        <el-input v-model="addForm.visitUrl" auto-complete="off"></el-input>
+                        <el-input v-model="addForm.url" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="费率" label-width="120px" prop='rate'>
                         <el-input v-model.number="addForm.rate"></el-input>
                     </el-form-item>
-                    <el-form-item label="服务费" label-width="120px" prop='serviceCharge'>
-                        <el-input v-model.number="addForm.serviceCharge"></el-input>
+                    <el-form-item label="贷款范围" label-width="120px" prop='serviceCharge'>
+                        <el-input v-model="addForm.service"></el-input>
                     </el-form-item>
-                    <el-form-item label="最高额度" label-width="120px" prop='topQota'>
-                        <el-input v-model.number="addForm.topQota"></el-input>
+                    <el-form-item label="金额" label-width="120px" prop='topQota'>
+                        <el-input v-model.number="addForm.quta"></el-input>
                     </el-form-item>
-                    <el-form-item label="最低额度" label-width="120px" prop='bottomQota'>
-                        <el-input v-model.number="addForm.bottomQota"></el-input>
+                    <el-form-item label="流程" label-width="120px" prop='bottomQota'>
+                        <el-input v-model="addForm.flow"></el-input>
                     </el-form-item>
-                    <el-form-item label="放款时间(小时)" label-width="120px" prop='outTime'>
-                        <el-input v-model.number="addForm.outTime"></el-input>
+                    <el-form-item label="申请条件" label-width="120px" prop='outTime'>
+                        <el-input v-model="addForm.conditions"></el-input>
                     </el-form-item>
-                    <el-form-item label="借款期限(总月数)" label-width="120px">
-                        <el-select v-model="deadlineStatus"  @change="handleDiedlineSelect" >
-                            <el-option
-                              v-for="item in deadline" 
-                              :key="item.id"
-                              :label="item.label"
-                              :value="item.value">
-                            </el-option>
-                        </el-select>
+                    <el-form-item label="审核说明" label-width="120px" prop='outTime'>
+                        <el-input v-model="addForm.commits"></el-input>
+                    </el-form-item>
+                    <el-form-item label="排序" label-width="120px" prop='outTime'>
+                        <el-input v-model.number="addForm.orderBy"></el-input>
+                    </el-form-item>
+                    <el-form-item label="审核说明" label-width="120px" prop='outTime'>
+                        <el-input v-model="addForm.checkDes"></el-input>
+                    </el-form-item>
+                    <el-form-item label="期限" label-width="120px" prop='outTime'>
+                        <el-input v-model="addForm.deadLine"></el-input>
+                    </el-form-item>
+                    <el-form-item label="期限范围" label-width="120px" prop='outTime'>
+                        <el-input v-model="addForm.limitTime"></el-input>
+                    </el-form-item>
+                    <el-form-item label="允许申请人数" label-width="120px" prop='outTime'>
+                        <el-input v-model.number="addForm.usersNum"></el-input>
                     </el-form-item>
                      <el-form-item label="启用状态" label-width="120px">
                         <el-select v-model="selectStatus"  @change="handleSelect" >
                             <el-option
-                              v-for="item in status" 
+                              v-for="item in status"
                               :key="item.id"
                               :label="item.label"
                               :value="item.value">
@@ -142,44 +149,62 @@
                     <el-form-item label="logo" label-width="120px" prop='logo'>
                         <el-input v-model="selectTable.logo" auto-complete="off"></el-input>
                     </el-form-item>
-                     <el-form-item label="网址" label-width="120px" prop='visitUrl'>
-                        <el-input v-model="selectTable.visitUrl" auto-complete="off"></el-input>
+                    <el-form-item label="网址" label-width="120px" prop='visitUrl'>
+                        <el-input v-model="selectTable.url" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item label="费率" label-width="120px" prop='rate'>
                         <el-input v-model.number="selectTable.rate"></el-input>
                     </el-form-item>
-                    <el-form-item label="服务费" label-width="120px" prop='serviceCharge'>
-                        <el-input v-model.number="selectTable.serviceCharge"></el-input>
+                    <el-form-item label="贷款范围" label-width="120px" prop='serviceCharge'>
+                        <el-input v-model="selectTable.service"></el-input>
                     </el-form-item>
-                    <el-form-item label="最高额度" label-width="120px" prop='topQota'>
-                        <el-input v-model.number="selectTable.topQota"></el-input>
+                    <el-form-item label="金额" label-width="120px" prop='topQota'>
+                        <el-input v-model.number="selectTable.quta"></el-input>
                     </el-form-item>
-                    <el-form-item label="最低额度" label-width="120px" prop='bottomQota'>
-                        <el-input v-model.number="selectTable.bottomQota"></el-input>
+                    <el-form-item label="流程" label-width="120px" prop='bottomQota'>
+                        <el-input v-model="selectTable.flow"></el-input>
                     </el-form-item>
-                    <el-form-item label="放款时间(小时)" label-width="120px" prop='outTime'>
-                        <el-input v-model.number="selectTable.outTime"></el-input>
+                    <el-form-item label="申请条件" label-width="120px" prop='outTime'>
+                        <el-input v-model="selectTable.conditions"></el-input>
                     </el-form-item>
-                      <el-form-item label="借款期限(总月数)" label-width="120px">
-                        <el-select v-model="deadlineStatus"  @change="handleDiedlineSelect" :placeholder="deadlineMenu.label">
-                            <el-option
-                              v-for="item in deadline" 
-                              :key="item.id"
-                              :label="item.label"
-                              :value="item.value">
-                            </el-option>
-                        </el-select>
+                    <el-form-item label="审核说明" label-width="120px" prop='outTime'>
+                        <el-input v-model="selectTable.commits"></el-input>
                     </el-form-item>
-                     <el-form-item label="启用状态" label-width="120px">
+                    <el-form-item label="排序" label-width="120px" prop='outTime'>
+                        <el-input v-model.number="selectTable.orderBy"></el-input>
+                    </el-form-item>
+                    <el-form-item label="审核说明" label-width="120px" prop='outTime'>
+                        <el-input v-model="selectTable.checkDes"></el-input>
+                    </el-form-item>
+                    <el-form-item label="期限" label-width="120px" prop='outTime'>
+                        <el-input v-model="selectTable.deadLine"></el-input>
+                    </el-form-item>
+                    <el-form-item label="期限范围" label-width="120px" prop='outTime'>
+                        <el-input v-model="selectTable.limitTime"></el-input>
+                    </el-form-item>
+                    <el-form-item label="允许申请人数" label-width="120px" prop='outTime'>
+                        <el-input v-model.number="selectTable.usersNum"></el-input>
+                    </el-form-item>
+                    <el-form-item label="启用状态" label-width="120px">
                         <el-select v-model="selectStatus"  @change="handleSelect" :placeholder="selectMenu.label">
                             <el-option
-                              v-for="item in status" 
-                              :key="item.id"
-                              :label="item.label"
-                              :value="item.value">
+                                v-for="item in status"
+                                :key="item.id"
+                                :label="item.label"
+                                :value="item.value">
                             </el-option>
                         </el-select>
                     </el-form-item>
+                    <!--<el-form-item label="启用状态" label-width="120px">-->
+                        <!--<el-select v-model="selectTable.selectStatus"  @change="handleSelect" >-->
+                            <!--<el-option-->
+                                <!--v-for="item in status"-->
+                                <!--:key="item.id"-->
+                                <!--:label="item.label"-->
+                                <!--:value="item.value">-->
+                            <!--</el-option>-->
+                        <!--</el-select>-->
+                    <!--</el-form-item>-->
                 </el-form>
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="dialogFormVisible = false">取 消</el-button>
@@ -207,7 +232,7 @@
                     name: ''
                 },
                 city: {},
-                pageNum: 1,
+                pageNum: 0,
                 pageSize: 20,
                 count: 0,
                 tableData: [],
@@ -222,7 +247,7 @@
                     logo: [
                         {required: true, message: '请输入logo图片', trigger: 'blur'}
                     ],
-                    visitUrl: [
+                    url: [
                         {required: true, message: '请输入网址', trigger: 'blur'}
                     ],
                     rate: [
@@ -230,27 +255,12 @@
                         {type: 'number',message: '费率必须是数字'}
 
                     ],
-                    serviceCharge: [
+                    service: [
                         {required: true, message: '请输入服务费'},
                         {type: 'number',message: '服务费必须是数字'}
 
-                    ],
-                    topQota: [
-                        {required: true, message: '请输入最高额度'},
-                        {type: 'number',message: '最高额度必须是数字'}
+                    ]
 
-
-                    ],
-                    bottomQota: [
-                        {required: true, message: '请输入最低额度'},
-                        {type: 'number',message: '最低额度必须是数字'}
-
-                    ],
-                    outTime: [
-                        {required: true, message: '请输入放款时间'},
-                        {type: 'number',message: '放款时间必须是数字'}
-                    ],
-                  
                 },
 
                 dialogFormVisible: false,//编辑页面是否显示
@@ -263,31 +273,15 @@
                     logo: [
                         {required: true, message: '请输入logo图片', trigger: 'blur'}
                     ],
-                    visitUrl: [
+                    url: [
                         {required: true, message: '请输入网址', trigger: 'blur'}
                     ],
                     rate: [
                         {required: true, message: '请输入费率'},
-                    ],
-                    serviceCharge: [
-                        {required: true, message: '请输入服务费'},
-                        
-
-                    ],
-                    topQota: [
-                        {required: true, message: '请输入最高额度'},
-                    
-                    ],
-                    bottomQota: [
-                        {required: true, message: '请输入最低额度'},
-                
-                    ],
-                    outTime: [
-                        {required: true, message: '请输入放款时间'},
-                    ],
+                    ]
 
                 },
-              
+
                 status: [{
                     value: '0',
                     label: '禁用'
@@ -361,29 +355,35 @@
                     value: '0',
                     label: '禁用'
                 }]
-            
+
             },
              //显示新增界面
             handleAdd: function () {
                 this.addFormVisible = true;
-                
+
             },
             submitLoan(addForm) {
+
                 this.$refs[addForm].validate(async (valid) => {
                     if (valid) {
                         const params = {
                             appName: this.addForm.appName,
                             logo: this.addForm.logo,
-                            visitUrl:this.addForm.visitUrl,
+                            url:this.addForm.url,
                             rate: this.addForm.rate,
-                            serviceCharge: this.addForm.serviceCharge,
-                            topQota: this.addForm.topQota,
-                            bottomQota: this.addForm.bottomQota,
-                            outTime: this.addForm.outTime,
-                            enabled: this.selectStatus,
-                            deadline:this.deadlineStatus
+                            service: this.addForm.service,
+                            quta: this.addForm.quta,
+                            flow: this.addForm.flow,
+                            conditions: this.addForm.conditions,
+                            commits: this.addForm.commits,
+                            orderBy: this.addForm.orderBy,
+                            checkDes:this.addForm.checkDes,
+                            deadLine:this.addForm.deadLine,
+                            limitTime:this.addForm.limitTime,
+                            usersNum:this.addForm.usersNum,
+                            enabled: this.selectStatus
                         }
-                        
+
                         try{
 
                             const result = await insertHotLoan(params);
@@ -420,21 +420,28 @@
                 });
             },
             async getCooperation(){
-                const cooperations = await getCooperation({type: 0, pageNum: this.pageNum, pageSize: this.pageSize});
+                const cooperations = await getCooperation({pageNum: this.pageNum, pageSize: this.pageSize});
                 this.tableData = [];
                 this.count = cooperations.obj.totalElements;
                 cooperations.obj.content.forEach(item => {
                     const tableData = {};
                     tableData.appName = item.appName;
                     tableData.logo = item.logo;
-                    tableData.visitUrl = item.visitUrl;
+                    tableData.url = item.url;
                     tableData.id = item.id;
                     tableData.rate = item.rate;
-                    tableData.serviceCharge = item.serviceCharge;
-                    tableData.topQota = item.topQota;
-                    tableData.bottomQota = item.bottomQota;
-                    tableData.outTime = item.outTime;
-                    tableData.deadline = item.deadline;
+                    tableData.service = item.service;
+                    tableData.quta = item.quta;
+                    tableData.flow = item.flow;
+                    tableData.conditions = item.conditions;
+                    tableData.commits = item.commits;
+                    tableData.orderBy = item.orderBy;
+                    tableData.checkDes = item.checkDes;
+                    tableData.createTime = item.createTime;
+                    tableData.deadLine = item.deadLine;
+                    tableData.limitTime = item.limitTime;
+                    tableData.updateTime = item.updateTime;
+                    tableData.usersNum = item.usersNum;
                     tableData.enabled = item.enabled;
                     if(item.enabled==0){
                         tableData.statusTxt = '禁用'
@@ -455,47 +462,23 @@
                 this.getCooperation();
             },
             handleEdit(index, row) {
+                console.log(row);
                 this.selectTable = row;
                 this.dialogFormVisible = true;
                 this.loanId = row.id;
 
-                if(row.enabled==0){
+                if(row.enabled == 0){
                     this.statusTxt = '禁用'
                 }else{
                     this.statusTxt = '启用'
 
                 }
-                if(row.deadline==1){
-                    this.deadlineTxt = '1个月'
-                }else if(row.deadline==2){
-                    this.deadlineTxt = '2个月'
-                }else if(row.deadline==3){
-                    this.deadlineTxt = '3个月'
-                }else if(row.deadline==4){
-                    this.deadlineTxt = '4个月'
-                }else if(row.deadline==5){
-                    this.deadlineTxt = '5个月'
-                }else if(row.deadline==6){
-                    this.deadlineTxt = '6个月'
-                }else if(row.deadline==7){
-                    this.deadlineTxt = '7个月'
-                }else if(row.deadline==8){
-                    this.deadlineTxt = '8个月'
-                }else if(row.deadline==9){
-                    this.deadlineTxt = '9个月'
-                }else if(row.deadline==10){
-                    this.deadlineTxt = '10个月'
-                }else if(row.deadline==11){
-                    this.deadlineTxt = '11个月'
-                }else if(row.deadline==12){
-                    this.deadlineTxt = '12个月'
-                }
-               
+
                 this.selectMenu = {label: this.statusTxt, value: row.enabled};
-                this.deadlineMenu = {label: this.deadlineTxt,value:row.deadline}
-               
+                //this.deadlineMenu = {label: this.deadlineTxt,value:row.deadline}
             },
             handleSelect(index){
+                console.log(index)
                 this.selectStatus = index;
             },
             handleDiedlineSelect(index){
@@ -507,7 +490,6 @@
                     Object.assign(this.selectTable, this.address);
                     this.selectTable.id = this.loanId;
                     this.selectTable.enabled = this.selectStatus;
-                    this.selectTable.deadline = this.deadlineStatus;                
                     const res = await updateHotLoan(this.selectTable)
                     if (res.code == 1) {
                         this.$message({
