@@ -384,6 +384,8 @@
                             enabled: this.selectStatus
                         }
 
+                        console.log(this.selectStatus);
+
                         try{
 
                             const result = await insertHotLoan(params);
@@ -490,6 +492,7 @@
                     Object.assign(this.selectTable, this.address);
                     this.selectTable.id = this.loanId;
                     this.selectTable.enabled = this.selectStatus;
+                    console.log(this.selectStatus);
                     const res = await updateHotLoan(this.selectTable)
                     if (res.code == 1) {
                         this.$message({
